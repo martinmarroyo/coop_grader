@@ -2,7 +2,7 @@ from coop_grader.tools import binder, core
 from pathlib import Path
 
 def validator(conf_filename: str = 'questions.yaml') -> dict:
-    path = conf_filename
+    path = r'coop_grader\python101\testrunner.py'
     validator_funcs = core.generate_tests(filepath=path)
     return validator_funcs
 

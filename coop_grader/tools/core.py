@@ -39,7 +39,7 @@ def generate_tests(filepath: str) -> dict:
             funcs = function_factory(conf)
             return funcs
     except FileNotFoundError:
-        print('Cannot create functions. Did you define your questions in test_config.yaml?')
+        print('Cannot create functions. Did you define your questions in questions.yaml?')
     except Exception:
         print('Something went wrong')
         raise

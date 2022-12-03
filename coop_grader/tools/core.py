@@ -1,7 +1,5 @@
-import yaml
 from coop_grader.tools import binder
 from typing import Any
-from yaml.loader import SafeLoader
 
 def function_factory(conf: dict) -> dict:
     questions = list(conf.keys())
@@ -11,14 +9,14 @@ def function_factory(conf: dict) -> dict:
         variable = conf[question]['variable_name']
         expected = conf[question]['expected_value']
         assertion = conf[question]['assertion']
-        assert_statement = generate_assertion_statement(assertion, expected)
+        assert_statement = generate_assertion_statement(assertion, expected, variable)
         correct_msg = messages['correct']
         incorrect_msg = messages['incorrect']
         missing_msg = messages['missing']
         template = f"""
         def {question}():
             try:
-                assert binder.VARS['{variable}'] {assert_statement}
+                {assert_statement}
                 print('{correct_msg}')
                 binder.VARS['{question}_correct'] = True
             except AssertionError:
@@ -31,7 +29,7 @@ def function_factory(conf: dict) -> dict:
     return functions
 
 
-    # Import yaml and generate functions for testrunner
+# Import yaml and generate functions for testrunner
 def generate_tests(conf: dict) -> dict:
     try:
         funcs = function_factory(conf)
@@ -41,11 +39,21 @@ def generate_tests(conf: dict) -> dict:
         raise
 
 
-def generate_assertion_statement(assertion: str, expected: Any) -> str:
+def generate_assertion_statement(assertion: str, expected: Any, variable: Any) -> str:
     """ Generates an assertion statement using the given assertion operation and value.
 
-    Given one of the following assertion operations ('GT', 'LT', 'EQ', 'GE', 'LE', 'NE', 'IN'),
-    this function generates a string containing the desired operation on the expected value.
+    Given one of the following assertion operations this function generates a string 
+    containing the desired operation on the expected value: 
+    
+    GT -         Greater Than 
+    LT -         Less Than 
+    EQ -         Equal to 
+    GE -         Greater than or equal to 
+    LE -         Less than or equal to 
+    NE -         Not Equal 
+    IN -         Checks for membership (e.g. 1 in [1,2,3]) 
+    INSTANCEOF - Checks if expected is an instance of a data type
+    
 
     e.g. generate_assertion_statement('EQ', 1) => '== 1'
 
@@ -57,24 +65,27 @@ def generate_assertion_statement(assertion: str, expected: Any) -> str:
         A string containing the given assertion operation on the expected value
 
     """
-    operations = ['GT', 'LT', 'EQ', 'GE', 'LE', 'NE', 'IN']
+    operations = ['GT', 'LT', 'EQ', 'GE', 'LE', 'NE', 'IN', 'INSTANCEOF']
     assertion = assertion.upper()
     if assertion not in operations:
         raise KeyError('Invalid assertion operation submitted') 
     if assertion == 'EQ':
-        statement = f'== {expected}'
+        statement = f'assert binder.VARS["{variable}"] == {expected}'
     elif assertion == 'NE':
-        statement = f'!= {expected}'
+        statement = f'assert binder.VARS["{variable}"] != {expected}'
     elif assertion == 'GE':
-        statement = f'>= {expected}'
+        statement = f'assert binder.VARS["{variable}"] >= {expected}'
     elif assertion == 'LE':
-        statement = f'<= {expected}'
+        statement = f'assert binder.VARS["{variable}"] <= {expected}'
     elif assertion == 'GT':
-        statement = f'> {expected}'
+        statement = f'assert binder.VARS["{variable}"] > {expected}'
     elif assertion == 'LT':
-        statement = f'< {expected}'
+        statement = f'assert binder.VARS["{variable}"] < {expected}'
     elif assertion == 'IN':
-        statement = f'in ({expected})'
+        statement = f'assert binder.VARS["{variable}"] in ({expected})'
+    elif assertion == 'INSTANCEOF':
+        statement = f'assert isinstance(binder.VARS["{variable}"], {expected}) == True'
+ 
     return statement
 
 

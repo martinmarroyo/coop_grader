@@ -14,4 +14,19 @@ Question2:
     correct: That is the correct number of Captains. Great job!
     incorrect: No, that is not the correct number of Captains. Try again.
     missing: Did you create the `num_capt` variable?
-
+Exercise1:
+  variable_name: x
+  assertion: EQ
+  expected_value: 3
+  messages:
+    correct: That is the correct answer. Great job!
+    incorrect: Incorrect. Try again.
+    missing: Did you create the `x` variables?
+Exercise2:
+  variable_name: my_name
+  assertion: INSTANCEOF
+  expected_value: str
+  messages:
+    correct: That is the correct answer. Great job!
+    incorrect: Incorrect. Try again.
+    missing: Did you create the `x` variables?

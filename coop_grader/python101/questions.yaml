@@ -1,0 +1,17 @@
+Question1:
+  variable_name: num_coopers
+  assertion: EQ
+  expected_value: 16
+  messages:
+    correct: That is the correct number of COOPers. Great job!
+    incorrect: No, that is not the correct number of COOPers. Try again.
+    missing: Did you create the `num_coopers` variable?
+Question2:
+  variable_name: num_capt
+  assertion: GE
+  expected_value: 4
+  messages:
+    correct: That is the correct number of Captains. Great job!
+    incorrect: No, that is not the correct number of Captains. Try again.
+    missing: Did you create the `num_capt` variable?
+

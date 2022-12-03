@@ -32,14 +32,10 @@ def function_factory(conf: dict) -> dict:
 
 
     # Import yaml and generate functions for testrunner
-def generate_tests(filepath: str) -> dict:
+def generate_tests(conf: dict) -> dict:
     try:
-        with open(filepath, 'r') as f:
-            conf = yaml.load(f, Loader=SafeLoader)
-            funcs = function_factory(conf)
-            return funcs
-    except FileNotFoundError:
-        print('Cannot create functions. Did you define your questions in questions.yaml?')
+        funcs = function_factory(conf)
+        return funcs
     except Exception:
         print('Something went wrong')
         raise

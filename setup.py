@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = 'coop_grader',
-    version = 0.0.1,
+    version = coop_grader.__version__,
     author = 'Martin Arroyo',
     author_email = 'captmarroyo@coopcareers.org',
     packages = find_packages(),
